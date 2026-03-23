@@ -410,12 +410,23 @@ function attachDragScroll(element, onScrollUpdate) {
   let startScrollTop = 0;
   let dragging = false;
   let pointerId = null;
+  let frameId = 0;
+
+  const scheduleUpdate = () => {
+    if (frameId) return;
+    frameId = requestAnimationFrame(() => {
+      frameId = 0;
+      onScrollUpdate();
+    });
+  };
 
   const startDrag = (clientY, nextPointerId = null) => {
+    if (element.scrollHeight <= element.clientHeight + 1) return false;
     dragging = true;
     startY = clientY;
     startScrollTop = element.scrollTop;
     pointerId = nextPointerId;
+    return true;
   };
 
   const moveDrag = (clientY) => {
@@ -430,7 +441,7 @@ function attachDragScroll(element, onScrollUpdate) {
   };
 
   element.addEventListener("pointerdown", (event) => {
-    startDrag(event.clientY, event.pointerId);
+    if (!startDrag(event.clientY, event.pointerId)) return;
     element.setPointerCapture(event.pointerId);
   });
   element.addEventListener("pointermove", (event) => {
@@ -440,7 +451,7 @@ function attachDragScroll(element, onScrollUpdate) {
   element.addEventListener("pointerup", endDrag);
   element.addEventListener("pointercancel", endDrag);
   element.addEventListener("lostpointercapture", endDrag);
-  element.addEventListener("scroll", onScrollUpdate);
+  element.addEventListener("scroll", scheduleUpdate, { passive: true });
 }
 
 function updateTaskScrollHint(card, list, hint) {
@@ -455,19 +466,19 @@ function updateScrollableHint(card, element, hint, textSet) {
   const isOverflowing = element.scrollHeight > element.clientHeight + 1;
   card.classList.toggle("is-scrollable", isOverflowing);
   if (!isOverflowing) {
-    hint.textContent = "";
+    if (hint.textContent !== "") hint.textContent = "";
     return;
   }
 
   const atTop = element.scrollTop <= 2;
   const atBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 2;
+  let nextText = textSet.middle;
   if (atTop && !atBottom) {
-    hint.textContent = textSet.moreTop;
+    nextText = textSet.moreTop;
   } else if (!atTop && atBottom) {
-    hint.textContent = textSet.moreBottom;
-  } else {
-    hint.textContent = textSet.middle;
+    nextText = textSet.moreBottom;
   }
+  if (hint.textContent !== nextText) hint.textContent = nextText;
 }
 function renderWeekdays() {
   weekdays.innerHTML = "";
