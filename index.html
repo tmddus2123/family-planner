@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -57,8 +57,13 @@
 
                 <div class="memo-card">
                   <p class="section-label">공유 메모</p>
+                  <div class="memo-head">
+                    <p class="section-label">공유 메모</p>
+                    <button class="memo-edit-button" id="memoEditButton" type="button" aria-label="공유 메모 수정">&#9998;</button>
+                  </div>
                   <div class="memo-content" id="memoContent">
                     <p id="memoText"></p>
+                    <textarea class="memo-editor hidden" id="memoEditor"></textarea>
                   </div>
                   <div class="memo-scroll-hint" id="memoScrollHint">drag up/down to view more</div>
                   <button class="expand-button hidden" id="memoToggleButton" type="button" aria-expanded="false">more v</button>
@@ -180,7 +185,7 @@
 
         <div class="todo-actions">
           <button class="settings-button" id="cancelTodoComposerButton" type="button">취소</button>
-          <button class="action-button" type="submit">추가</button>
+          <button class="action-button" id="todoComposerSubmitButton" type="submit">추가</button>
         </div>
       </form>
     </section>
@@ -189,3 +194,4 @@
   <script src="./js/script.js"></script>
 </body>
 </html>
+

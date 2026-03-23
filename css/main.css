@@ -24,11 +24,6 @@
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 241, 229, 0.95)),
     linear-gradient(135deg, rgba(214, 130, 101, 0.08), rgba(70, 112, 201, 0.08));
-  transition: transform 0.25s ease;
-}
-
-.mini-day-card:hover {
-  transform: scale(1.02);
 }
 
 .mini-day-card .mini-label {
@@ -93,18 +88,35 @@
   min-height: 188px;
 }
 
+.memo-card > .section-label {
+  display: none;
+}
+
+.memo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.memo-edit-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1e6da;
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1;
+}
+
 .memo-content {
   overflow: auto;
   max-height: 92px;
   padding-right: 4px;
   touch-action: pan-y;
-  cursor: grab;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-}
-
-.memo-content:active {
-  cursor: grabbing;
 }
 
 .memo-content::-webkit-scrollbar {
@@ -114,6 +126,22 @@
 .memo-card p:last-child {
   font-size: 18px;
   line-height: 1.65;
+}
+
+.memo-editor {
+  width: 100%;
+  min-height: 92px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  background: #fffdf9;
+  color: var(--text);
+  resize: vertical;
+}
+
+.memo-editor.hidden,
+#memoText.hidden {
+  display: none;
 }
 
 .members-head {
@@ -187,13 +215,8 @@
   max-height: 170px;
   padding-right: 4px;
   touch-action: pan-y;
-  cursor: grab;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-}
-
-.task-list:active {
-  cursor: grabbing;
 }
 
 .task-list::-webkit-scrollbar {
@@ -209,6 +232,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .task-scroll-hint {
@@ -220,7 +244,7 @@
   letter-spacing: 0.04em;
   border-top: 1px solid rgba(89, 61, 46, 0.08);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.12s ease;
 }
 
 .memo-scroll-hint {
@@ -232,7 +256,7 @@
   letter-spacing: 0.04em;
   border-top: 1px solid rgba(89, 61, 46, 0.08);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.12s ease;
 }
 
 .memo-card.is-scrollable .memo-scroll-hint,

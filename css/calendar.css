@@ -12,6 +12,13 @@
   background: var(--surface-strong);
 }
 
+.schedule-card {
+  max-height: 640px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
 .calendar-head,
 .schedule-head {
   display: flex;
@@ -117,6 +124,7 @@
 .event-list {
   display: grid;
   gap: 12px;
+  overflow: visible;
 }
 
 .event-item {
