@@ -85,6 +85,8 @@ const todayTitle = document.getElementById("todayTitle");
 const memoText = document.getElementById("memoText");
 const memoContent = document.getElementById("memoContent");
 const memoScrollHint = document.getElementById("memoScrollHint");
+const memoEditor = document.getElementById("memoEditor");
+const memoEditButton = document.getElementById("memoEditButton");
 const memoToggleButton = document.getElementById("memoToggleButton");
 const taskColumns = document.getElementById("taskColumns");
 const membersTitle = document.getElementById("membersTitle");
@@ -111,6 +113,7 @@ const todoComposerModal = document.getElementById("todoComposerModal");
 const todoComposerForm = document.getElementById("todoComposerForm");
 const todoTitleInput = document.getElementById("todoTitleInput");
 const todoParticipantList = document.getElementById("todoParticipantList");
+const todoComposerSubmitButton = document.getElementById("todoComposerSubmitButton");
 const closeTodoComposerButton = document.getElementById("closeTodoComposerButton");
 const cancelTodoComposerButton = document.getElementById("cancelTodoComposerButton");
 const inviteUserButton = document.getElementById("inviteUserButton");
@@ -119,6 +122,8 @@ const inviteLimitText = document.getElementById("inviteLimitText");
 const fixedOwnerCard = document.getElementById("fixedOwnerCard");
 const sortList = document.getElementById("sortList");
 const colorList = document.getElementById("colorList");
+let isEditingMemo = false;
+let todoEditContext = null;
 
 attachDragScroll(memoContent, () => {
   const card = memoContent.closest(".memo-card");
@@ -129,6 +134,7 @@ attachDragScroll(memoContent, () => {
     middle: "drag up/down to browse",
   });
 });
+memoEditButton.addEventListener("click", toggleMemoEdit);
 
 prevDayButton.addEventListener("click", () => moveDay(-1));
 nextDayButton.addEventListener("click", () => moveDay(1));
@@ -335,6 +341,10 @@ function renderOverview() {
   activeUserLabel.textContent = activeUser.name;
   todayTitle.textContent = formatHeadline(currentDate);
   memoText.textContent = info.memo;
+  memoEditor.value = info.memo;
+  memoText.classList.toggle("hidden", isEditingMemo);
+  memoEditor.classList.toggle("hidden", !isEditingMemo);
+  memoEditButton.innerHTML = isEditingMemo ? "&#10003;" : "&#9998;";
   memoContent.scrollTop = 0;
   memoToggleButton.classList.add("hidden");
   membersTitle.textContent = `${orderedUsers.length}명의 오늘 TODO`;
@@ -363,9 +373,16 @@ function renderOverview() {
 
     const list = document.createElement("ul");
     list.className = "task-list";
-    tasks.forEach((task) => {
+    tasks.forEach((task, taskIndex) => {
       const item = document.createElement("li");
       item.textContent = task;
+      item.addEventListener("click", () => openTodoComposer({
+        mode: "edit",
+        userId: user.id,
+        taskIndex,
+        title: task,
+        participants: findTodoEventParticipants(currentKey, task, user.id),
+      }));
       list.appendChild(item);
     });
     const scrollHint = document.createElement("div");
@@ -376,7 +393,7 @@ function renderOverview() {
     article.appendChild(scrollHint);
     attachDragScroll(list, () => updateTaskScrollHint(article, list, scrollHint));
     if (index === 0) {
-      article.querySelector('[data-action="add-todo"]').addEventListener("click", openTodoComposer);
+      article.querySelector('[data-action="add-todo"]').addEventListener("click", () => openTodoComposer());
     }
     taskColumns.appendChild(article);
   });
@@ -406,10 +423,6 @@ function updateOverviewOverflowControls() {
 }
 
 function attachDragScroll(element, onScrollUpdate) {
-  let startY = 0;
-  let startScrollTop = 0;
-  let dragging = false;
-  let pointerId = null;
   let frameId = 0;
 
   const scheduleUpdate = () => {
@@ -420,37 +433,6 @@ function attachDragScroll(element, onScrollUpdate) {
     });
   };
 
-  const startDrag = (clientY, nextPointerId = null) => {
-    if (element.scrollHeight <= element.clientHeight + 1) return false;
-    dragging = true;
-    startY = clientY;
-    startScrollTop = element.scrollTop;
-    pointerId = nextPointerId;
-    return true;
-  };
-
-  const moveDrag = (clientY) => {
-    if (!dragging) return;
-    const delta = clientY - startY;
-    element.scrollTop = startScrollTop - delta;
-  };
-
-  const endDrag = () => {
-    dragging = false;
-    pointerId = null;
-  };
-
-  element.addEventListener("pointerdown", (event) => {
-    if (!startDrag(event.clientY, event.pointerId)) return;
-    element.setPointerCapture(event.pointerId);
-  });
-  element.addEventListener("pointermove", (event) => {
-    if (pointerId !== event.pointerId) return;
-    moveDrag(event.clientY);
-  });
-  element.addEventListener("pointerup", endDrag);
-  element.addEventListener("pointercancel", endDrag);
-  element.addEventListener("lostpointercapture", endDrag);
   element.addEventListener("scroll", scheduleUpdate, { passive: true });
 }
 
@@ -625,24 +607,59 @@ function renderSelectedEvents() {
 function openSettings() {
   renderSettings();
   settingsModal.classList.remove("hidden");
+  syncModalBodyLock();
 }
 
 function closeSettings() {
   settingsModal.classList.add("hidden");
+  syncModalBodyLock();
 }
 
-function openTodoComposer() {
+function toggleMemoEdit() {
   const activeUser = getActiveUser();
   if (!activeUser) return;
 
-  todoTitleInput.value = "";
-  todoParticipantList.innerHTML = "";
+  const currentKey = toDateKey(getDateByOffset(state.currentOffset));
+  const info = getDailyData(currentKey);
 
-  state.users.forEach((user, index) => {
+  if (!isEditingMemo) {
+    isEditingMemo = true;
+    memoEditor.value = info.memo;
+    renderOverview();
+    requestAnimationFrame(() => memoEditor.focus());
+    return;
+  }
+
+  info.memo = memoEditor.value.trim() || "등록된 메모가 없습니다. 이 날의 공통 메모를 추가해 보세요.";
+  isEditingMemo = false;
+  saveState();
+  renderAll();
+}
+
+function findTodoEventParticipants(dateKey, title, userId) {
+  const matched = (state.events[dateKey] || []).find((event) => (
+    event.time === "TODO" &&
+    event.title === title &&
+    event.participants.includes(userId)
+  ));
+  return matched?.participants || [userId];
+}
+
+function openTodoComposer(options = null) {
+  const activeUser = getActiveUser();
+  if (!activeUser) return;
+  todoEditContext = options?.mode === "edit" ? options : null;
+
+  todoTitleInput.value = options?.title || "";
+  todoParticipantList.innerHTML = "";
+  todoComposerSubmitButton.textContent = todoEditContext ? "수정" : "추가";
+
+  state.users.forEach((user) => {
+    const selectedParticipants = options?.participants || [activeUser.id];
     const option = document.createElement("label");
     option.className = "participant-option";
     option.innerHTML = `
-      <input type="checkbox" name="participants" value="${user.id}" ${user.id === activeUser.id ? "checked" : ""}>
+      <input type="checkbox" name="participants" value="${user.id}" ${selectedParticipants.includes(user.id) ? "checked" : ""}>
       <span class="color-swatch" style="background:${user.color}"></span>
       <span>${user.name}</span>
     `;
@@ -650,12 +667,23 @@ function openTodoComposer() {
   });
 
   todoComposerModal.classList.remove("hidden");
+  syncModalBodyLock();
   requestAnimationFrame(() => todoTitleInput.focus());
 }
 
 function closeTodoComposer() {
   todoComposerModal.classList.add("hidden");
   todoComposerForm.reset();
+  todoEditContext = null;
+  todoComposerSubmitButton.textContent = "추가";
+  syncModalBodyLock();
+}
+
+function syncModalBodyLock() {
+  const hasOpenModal =
+    !settingsModal.classList.contains("hidden") ||
+    !todoComposerModal.classList.contains("hidden");
+  document.body.classList.toggle("modal-open", hasOpenModal);
 }
 
 function submitTodoComposer(event) {
@@ -677,21 +705,38 @@ function submitTodoComposer(event) {
     .map((input) => input.value);
   const normalizedParticipants = participants.length ? participants : [activeUser.id];
 
-  const currentTasks = info.tasks[activeUser.id] || [];
-  const nextTasks = currentTasks.length === 1 && currentTasks[0] === "등록된 할 일이 없습니다."
-    ? [title]
-    : [...currentTasks, title];
-  info.tasks[activeUser.id] = nextTasks;
-
   if (!Array.isArray(state.events[currentKey])) {
     state.events[currentKey] = [];
   }
 
-  state.events[currentKey].push({
-    title,
-    time: "TODO",
-    participants: normalizedParticipants,
-  });
+  if (todoEditContext) {
+    const ownerTasks = info.tasks[todoEditContext.userId] || [];
+    if (ownerTasks[todoEditContext.taskIndex] !== undefined) {
+      ownerTasks[todoEditContext.taskIndex] = title;
+    }
+
+    const matchedEvent = (state.events[currentKey] || []).find((item) => (
+      item.time === "TODO" &&
+      item.title === todoEditContext.title &&
+      item.participants.includes(todoEditContext.userId)
+    ));
+    if (matchedEvent) {
+      matchedEvent.title = title;
+      matchedEvent.participants = normalizedParticipants;
+    }
+  } else {
+    const currentTasks = info.tasks[activeUser.id] || [];
+    const nextTasks = currentTasks.length === 1 && currentTasks[0] === "등록된 할 일이 없습니다."
+      ? [title]
+      : [...currentTasks, title];
+    info.tasks[activeUser.id] = nextTasks;
+
+    state.events[currentKey].push({
+      title,
+      time: "TODO",
+      participants: normalizedParticipants,
+    });
+  }
 
   if (state.selectedDate === currentKey) {
     renderSelectedEvents();
