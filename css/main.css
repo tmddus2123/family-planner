@@ -1,0 +1,293 @@
+.date-strip {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 180px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.mini-day-card,
+.today-panel,
+.memo-card,
+.task-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+}
+
+.mini-day-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 520px;
+  padding: 24px;
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 241, 229, 0.95)),
+    linear-gradient(135deg, rgba(214, 130, 101, 0.08), rgba(70, 112, 201, 0.08));
+  transition: transform 0.25s ease;
+}
+
+.mini-day-card:hover {
+  transform: scale(1.02);
+}
+
+.mini-day-card .mini-label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.mini-day-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 28px;
+}
+
+.mini-day-card span {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.today-panel {
+  padding: 28px;
+  overflow: hidden;
+}
+
+.today-panel.slide-left {
+  animation: slideLeft 0.32s ease;
+}
+
+.today-panel.slide-right {
+  animation: slideRight 0.32s ease;
+}
+
+.today-head {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 56px;
+  gap: 18px;
+  align-items: center;
+}
+
+.today-head h3 {
+  font-size: clamp(30px, 4vw, 44px);
+}
+
+.nav-arrow {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #f1e6da;
+  color: var(--text);
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.memo-card {
+  margin-top: 24px;
+  padding: 22px;
+  background: linear-gradient(135deg, #fff8f0, #fff3e3);
+  min-height: 188px;
+}
+
+.memo-content {
+  overflow: auto;
+  max-height: 92px;
+  padding-right: 4px;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.memo-content:active {
+  cursor: grabbing;
+}
+
+.memo-content::-webkit-scrollbar {
+  width: 0;
+}
+
+.memo-card p:last-child {
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.members-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-end;
+  margin-top: 22px;
+}
+
+.members-head h4 {
+  font-size: 24px;
+}
+
+.members-help {
+  max-width: 360px;
+  color: var(--muted);
+  line-height: 1.6;
+  text-align: right;
+}
+
+.task-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.task-card {
+  padding: 20px;
+  border-top-width: 4px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.task-card-head,
+.task-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-card-head {
+  justify-content: space-between;
+}
+
+.task-card-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-card h4 {
+  font-size: 20px;
+}
+
+.task-role {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0;
+  display: grid;
+  gap: 10px;
+  overflow: auto;
+  max-height: 170px;
+  padding-right: 4px;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.task-list:active {
+  cursor: grabbing;
+}
+
+.task-list::-webkit-scrollbar {
+  width: 0;
+}
+
+.task-list li {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f7f1ea;
+  line-height: 1.5;
+  min-height: 52px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-scroll-hint {
+  margin-top: 10px;
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-top: 1px solid rgba(89, 61, 46, 0.08);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.memo-scroll-hint {
+  margin-top: 10px;
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-top: 1px solid rgba(89, 61, 46, 0.08);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.memo-card.is-scrollable .memo-scroll-hint,
+.task-card.is-scrollable .task-scroll-hint {
+  opacity: 1;
+}
+
+.task-add-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #2f241f;
+  color: #fff7f0;
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(34px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-34px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .task-columns,
+  .date-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-day-card {
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .members-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .members-help {
+    max-width: none;
+    text-align: left;
+  }
+}

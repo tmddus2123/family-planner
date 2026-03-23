@@ -1,0 +1,263 @@
+:root {
+  --surface: rgba(255, 252, 247, 0.84);
+  --surface-strong: #fffaf4;
+  --text: #2f241f;
+  --muted: #7e6d63;
+  --line: rgba(89, 61, 46, 0.12);
+  --shadow: 0 24px 60px rgba(60, 38, 25, 0.14);
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --all-color: #1d9b7e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "SUIT", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(214, 130, 101, 0.16), transparent 20%),
+    radial-gradient(circle at bottom right, rgba(70, 112, 201, 0.16), transparent 22%),
+    linear-gradient(135deg, #f6f0e7 0%, #f2e7db 48%, #efe6df 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+.app-shell {
+  padding: 28px;
+}
+
+.screen {
+  display: none;
+  min-height: calc(100vh - 56px);
+}
+
+.screen.active {
+  display: flex;
+}
+
+.screen-app {
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-card,
+.app-card,
+.settings-modal {
+  width: min(1180px, 100%);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow,
+.section-label,
+.day-label {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.app-card {
+  padding: 28px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar h2 {
+  font-size: clamp(28px, 3.5vw, 40px);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tab-row {
+  display: inline-flex;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--line);
+}
+
+.tab-button,
+.settings-button,
+.action-button,
+.close-button {
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.tab-button {
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.tab-button.active {
+  background: #2f241f;
+  color: #fff7f0;
+}
+
+.settings-button,
+.action-button {
+  padding: 13px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.settings-button {
+  background: #efe4d8;
+  color: var(--text);
+}
+
+.settings-button:hover,
+.action-button:hover {
+  transform: translateY(-1px);
+}
+
+.action-button {
+  background: #2f241f;
+  color: #fff7f0;
+}
+
+.action-button.danger {
+  background: #a84343;
+}
+
+.action-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.tab-panel {
+  display: none;
+  padding-top: 28px;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.task-dot,
+.legend-dot,
+.marker,
+.color-swatch,
+.member-chip::before {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.task-dot,
+.legend-dot,
+.color-swatch {
+  display: inline-block;
+}
+
+.marker.all,
+.legend-dot.all,
+.event-pill.all,
+.all-chip {
+  background: rgba(29, 155, 126, 0.14);
+  color: var(--all-color);
+}
+
+.empty-state {
+  padding: 18px;
+  border-radius: 16px;
+  background: #f7f0e8;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.expand-button {
+  margin-top: 12px;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  align-self: flex-start;
+}
+
+.expand-button.hidden {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .calendar-layout,
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .hero-card,
+  .app-card,
+  .settings-modal {
+    padding: 20px;
+  }
+
+  .topbar,
+  .topbar-actions,
+  .calendar-head,
+  .schedule-head,
+  .modal-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tab-row {
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
+  }
+
+  .settings-button {
+    width: 100%;
+  }
+}

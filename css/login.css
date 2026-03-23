@@ -1,0 +1,77 @@
+.screen-login {
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-card {
+  padding: 64px;
+}
+
+h1 {
+  font-size: clamp(34px, 6vw, 60px);
+  line-height: 1.03;
+  max-width: 760px;
+}
+
+.hero-copy {
+  margin-top: 18px;
+  max-width: 650px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.choice-card {
+  text-align: left;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 240, 234, 0.92));
+  border: 1px solid var(--line);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.choice-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px rgba(52, 33, 22, 0.1);
+}
+
+.choice-badge {
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+
+.choice-card strong {
+  display: block;
+  margin: 18px 0 8px;
+  font-size: 26px;
+}
+
+.choice-card small {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1024px) {
+  .choice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
