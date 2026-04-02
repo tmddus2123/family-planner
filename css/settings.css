@@ -21,8 +21,6 @@
   background: rgba(255, 250, 244, 0.98);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  contain: layout paint;
-  will-change: scroll-position;
 }
 
 .modal-head {
