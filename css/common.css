@@ -82,10 +82,6 @@ p {
   box-shadow: var(--shadow);
 }
 
-.hero-card {
-  backdrop-filter: blur(10px);
-}
-
 .eyebrow,
 .section-label,
 .day-label {
@@ -169,6 +165,10 @@ p {
 .action-button {
   background: #2f241f;
   color: #fff7f0;
+}
+
+.share-button {
+  white-space: nowrap;
 }
 
 .action-button.danger {

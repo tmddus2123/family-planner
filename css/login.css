@@ -21,57 +21,125 @@ h1 {
   line-height: 1.7;
 }
 
-.choice-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+.auth-layout {
+  display: flex;
+  justify-content: center;
   margin-top: 36px;
 }
 
-.choice-card {
-  text-align: left;
+.auth-card {
+  width: min(480px, 100%);
   padding: 24px;
   border-radius: var(--radius-lg);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 240, 234, 0.92));
   border: 1px solid var(--line);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.choice-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 35px rgba(52, 33, 22, 0.1);
+.auth-card.hidden {
+  display: none;
 }
 
-.choice-badge {
-  display: inline-flex;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #fff;
+.auth-card h3 {
+  font-size: 28px;
+  margin-bottom: 18px;
 }
 
-.choice-card strong {
-  display: block;
-  margin: 18px 0 8px;
-  font-size: 26px;
+.auth-form {
+  display: grid;
+  gap: 14px;
 }
 
-.choice-card small {
+.kakao-guide {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-radius: 18px;
+  background: #fff7d9;
+  border: 1px solid rgba(60, 38, 25, 0.08);
+  line-height: 1.6;
+}
+
+.kakao-guide strong {
+  font-size: 14px;
+}
+
+.kakao-guide code {
+  font-size: 13px;
+}
+
+.auth-field {
+  display: grid;
+  gap: 8px;
+}
+
+.auth-field span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.auth-field input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fffdf9;
+  color: var(--text);
+}
+
+.signup-color-input {
+  min-height: 54px;
+  padding: 8px;
+}
+
+.auth-feedback {
+  min-height: 22px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.5;
 }
 
+.auth-feedback.error {
+  color: #a84343;
+}
+
+.auth-feedback.success {
+  color: #1d7f68;
+}
+
+.auth-submit {
+  justify-self: flex-start;
+  min-width: 120px;
+}
+
+.kakao-login-button {
+  min-width: 220px;
+  background: #fee500;
+  color: #191600;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.auth-switch {
+  min-width: 120px;
+}
+
 @media (max-width: 1024px) {
-  .choice-grid {
-    grid-template-columns: 1fr;
+  .auth-layout {
+    justify-content: stretch;
+  }
+
+  .auth-card {
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
-  .choice-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .hero-card {
+    padding: 24px;
   }
 }
